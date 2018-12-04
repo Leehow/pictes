@@ -84,10 +84,11 @@ class TOD(object):
               y_c=boxes[c][1]*im_height
               h_c=boxes[c][2]*im_height
               w_c=boxes[c][3]*im_width
+              sc=int(scores[c]*100)/100
 
 
 #              print(" object %s is a %s - score: %s, location: %s" % (c, class_name, scores[c], boxes[c]))
-              item = [ { 'class name' : class_name, 'scores' :float('%0.3f'%scores[c]) , 'x' : int(x_c), 'y' : int(y_c), 'height' : int(h_c) , 'width' : int(w_c)} ]
+              item = [ { 'class name' : class_name, 'scores' :float(sc) , 'x' : int(x_c), 'y' : int(y_c), 'height' : int(h_c) , 'width' : int(w_c)} ]
 #              item=[]
               #item.append(class_name)
               #item.append(float(scores[c]))
@@ -96,15 +97,14 @@ class TOD(object):
               #item.append(float(boxes[c][2]))
               #item.append(float(boxes[c][3]))
               output.append(item)
-#        print(output)
-        outputJson = json.dumps(output)
-        return outputJson
+        #print(output)
+        return output
+        #outputJson = json.dumps(output)
+        #return outputJson
 
 
 def check(img_url):
     image = cv2.imread(img_url)
-    if image.any()==False:
-        return redirect(url_for('error'), 404)
     detecotr = TOD()
     dete_o = detecotr.detect(image)
     return dete_o

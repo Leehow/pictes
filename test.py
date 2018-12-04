@@ -33,7 +33,7 @@ class TOD(object):
         return category_index
 
     #I have changed a lot
-    def detect(self, image):
+    def detect(self, image,output):
         with self.detection_graph.as_default():
             with tf.Session(graph=self.detection_graph) as sess:
                 # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
@@ -58,8 +58,8 @@ class TOD(object):
                     line_thickness=8)
 
         #if you want see the box with iamge please use this
-        cv2.imwrite("test_image/2.jpg", image)
-        cv2.imwrite("static/show.jpg", image)
+        cv2.imwrite("test_image/show.jpg", image)
+        cv2.imwrite(output, image)
         #cv2.namedWindow("detection", cv2.WINDOW_NORMAL)
         #cv2.imshow("detection", image)
         #cv2.waitKey(0)
@@ -71,7 +71,7 @@ class TOD(object):
          
         threshold = 0.5  #CWH: set a minimum score threshold of 50%
         obj_above_thresh = sum(n > threshold for n in scores)
-        print("detected %s objects in %s above a %s score" % ( obj_above_thresh, image, threshold))
+        #print("detected %s objects in %s above a %s score" % ( obj_above_thresh, image, threshold))
         
         output = []
  
@@ -79,7 +79,7 @@ class TOD(object):
         for c in range(0, len(classes)):
           if scores[c] > threshold:
               class_name = self.category_index[classes[c]]['name']
-              print(" object %s is a %s - score: %s, location: %s" % (c, class_name, scores[c], boxes[c]))
+              #print(" object %s is a %s - score: %s, location: %s" % (c, class_name, scores[c], boxes[c]))
               #item = [ { 'item':c,'class name' : class_name, 'scores' : float(scores[c]), 'x' : float(boxes[c][0]), 'y' : float(boxes[c][1]), 'height' : float(boxes[c][2]) , 'width' : float(boxes[c][3])} ]
               item=[]
               item.append(class_name)
@@ -89,17 +89,16 @@ class TOD(object):
               item.append(float(boxes[c][2]))
               item.append(float(boxes[c][3]))
               output.append(item)
-        print(output)
-        outputJson = json.dumps(output)
-        return outputJson
+        #print(output)
+        return output
+        #outputJson = json.dumps(output)
+        #return outputJson
 
 
-def check(img_url):
+def check(img_url,output):
     image = cv2.imread(img_url)
-    if image.any()==False:
-        return redirect(url_for('error'), 404)
     detecotr = TOD()
-    dete_o = detecotr.detect(image)
+    dete_o = detecotr.detect(image,output)
     return dete_o
 
 #if __name__ == '__main__':

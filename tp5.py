@@ -1,5 +1,4 @@
 import cv2
-import json
 import numpy as np
 import tesserocr as tr
 from PIL import Image
@@ -27,17 +26,17 @@ def text_xml(jsonli,img_url):
     # get text
 	  text = api.GetUTF8Text()
     # iterate over returned list, draw rectangles
-	  output = json.loads(jsonli)
+	  #output = json.loads(jsonli)
+	  output = jsonli
 	  for (im,box,_,_) in boxes:
 	    x,y,w,h = box['x'],box['y'],box['w'],box['h']
     #cv2.rectangle(cv_img, (x,y), (x+w,y+h), color=(0,255,0))
     #cv2.putText(cv_img,'text',(x,y-5),cv2.FONT_HERSHEY_COMPLEX,0.5,(0,0,255),1)
 	    item = [ { 'class name' : 'text', 'scores' :'0.96', 'x' : x, 'y' : y, 'height' : h , 'width' : w} ]
 	    output.append(item)
-	    print(output)
+	    #print(output)
 	finally:
 	  api.End()
-	outputJson = json.dumps(output)
-	if outputJson==None:
-	  return None
-	return outputJson
+	return output
+	#outputJson = json.dumps(output)
+	#return outputJson
